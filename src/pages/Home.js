@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,19 @@ import {
   TextInput,
   Platform,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import Button from '../components/Button';
+import SkillCard from '../components/SkillCard';
 
 export default function Home() {
+  const [newSkill, setNewSkill] = useState('');
+  const [mySkills, setMySkills] = useState([]);
+
+  function handleAddNewSkill() {
+    setMySkills((oldState) => [...oldState, newSkill]);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome, César</Text>
@@ -18,15 +27,18 @@ export default function Home() {
         style={styles.input}
         placeholder='New Skills'
         placeholderTextColor={'#fff'}
+        onChangeText={setNewSkill}
       />
 
-      <Button />
+      <Button onPress={handleAddNewSkill} />
 
-      <TouchableOpacity>
-        <Text>skill</Text>
-      </TouchableOpacity>
+      <Text style={[styles.title, { marginVertical: 50 }]}>My Skills</Text>
 
-      <Text style={[styles.title, { marginTop: 50 }]}>My Skills</Text>
+      <FlatList
+        data={mySkills}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => <SkillCard skill={item} />}
+      />
     </View>
   );
 }
@@ -51,6 +63,4 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderRadius: 7,
   },
-  buttonSkill: {},
-  textSkill: {},
 });
